@@ -1,15 +1,4 @@
 create_author_database = '''
-CREATE TABLE post ( 
-  id INTEGER PRIMARY KEY,
-  header TEXT NOT NULL,
-  text TEXT NOT NULL,
-  author_id INTEGER NOT NULL,
-  blog_id INTEGER NOT NULL,
-  
-  FOREIGN KEY (author_id) REFERENCES author(id),
-  FOREIGN KEY (blog_id) REFERENCES blog(id)
-);
-
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   login TEXT NOT NULL,
@@ -23,6 +12,17 @@ CREATE TABLE blog (
   description TEXT NOT NULL,
   
   FOREIGN KEY (owner_id) REFERENCES author(id)
+);
+
+CREATE TABLE post ( 
+  id INTEGER PRIMARY KEY,
+  header TEXT NOT NULL,
+  text TEXT NOT NULL,
+  author_id INTEGER NOT NULL,
+  blog_id INTEGER NOT NULL,
+  
+  FOREIGN KEY (author_id) REFERENCES author(id),
+  FOREIGN KEY (blog_id) REFERENCES blog(id)
 );
 
 CREATE TABLE comment (
@@ -57,24 +57,30 @@ CREATE TABLE event_type (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL
 );
-
-INSERT INTO space_type (name) VALUES ('global');
-INSERT INTO space_type (name) VALUES ('blog');
-INSERT INTO space_type (name) VALUES ('post');
-
-INSERT INTO event_type (name) VALUES ('login');
-INSERT INTO event_type (name) VALUES ('comment');
-INSERT INTO event_type (name) VALUES ('create_post');
-INSERT INTO event_type (name) VALUES ('delete_post');
-INSERT INTO event_type (name) VALUES ('logout');
 '''
 
 select_event_by_user = '''
-SELECT strftime('%Y-%m-%d', datetime) AS date,
-    SUM(CASE WHEN event_type = 1 THEN 1 ELSE 0 END) AS logins,
-    SUM(CASE WHEN event_type = 5 THEN 1 ELSE 0 END) AS logouts,
-    SUM(CASE WHEN space_type = 2 THEN 1 ELSE 0 END) AS blog_events
+SELECT strftime('%Y-%m-%d', datetime) AS 'date',
+    SUM(CASE WHEN event_type_id = 1 THEN 1 ELSE 0 END) AS 'logins',
+    SUM(CASE WHEN event_type_id = 5 THEN 1 ELSE 0 END) AS 'logouts',
+    SUM(CASE WHEN space_type_id = 2 THEN 1 ELSE 0 END) AS 'blog_events'
 FROM logs
 WHERE user_id = "{}"
-GROUP BY date;
+GROUP BY strftime('%Y-%m-%d', datetime);
+'''
+
+get_user_id_by_login = 'SELECT id FROM users WHERE login = "{}";'
+
+select_comments_info_by_user_id = '''
+SELECT
+    usr.login as "login",
+    p.header AS "header",
+    athr.login AS "author",
+    COUNT(c.id) AS "amount"
+FROM post p
+JOIN users athr ON p.author_id = athr.id
+JOIN comment c ON p.id = c.post_id
+JOIN users usr ON c.user_id = usr.id
+WHERE usr.id = {}
+GROUP BY p.id;
 '''
