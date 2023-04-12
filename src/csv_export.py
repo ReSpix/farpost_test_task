@@ -30,6 +30,8 @@ def main():
     parse_to_file(user_id, queries.select_comments_info_by_user_id, blog_cursor, 'comment_info')
     parse_to_file(user_id, queries.select_event_by_user, events_cursor, 'events_info')
 
+    print('Статистика выведена в папку csv')
+
 
 def parse_to_file(user_id, query, cursor, filename):
     comments_info_query = query.format(user_id)
