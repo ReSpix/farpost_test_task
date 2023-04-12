@@ -3,7 +3,7 @@ import queries
 
 
 def main():
-    create_database(queries.create_author_database, 'authors')
+    create_database(queries.create_author_database, 'blog')
     create_database(queries.create_events_database, 'events')
 
 

@@ -5,11 +5,12 @@ CREATE TABLE post (
   text TEXT NOT NULL,
   author_id INTEGER NOT NULL,
   blog_id INTEGER NOT NULL,
+  
   FOREIGN KEY (author_id) REFERENCES author(id),
   FOREIGN KEY (blog_id) REFERENCES blog(id)
 );
 
-CREATE TABLE author (
+CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   login TEXT NOT NULL,
   email TEXT NOT NULL
@@ -20,7 +21,18 @@ CREATE TABLE blog (
   owner_id INTEGER NOT NULL,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
+  
   FOREIGN KEY (owner_id) REFERENCES author(id)
+);
+
+CREATE TABLE comment (
+  id INTEGER PRIMARY KEY,
+  text TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  post_id INTEGER NOT NULL,
+  
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (post_id) REFERENCES post(id)
 );
 '''
 
@@ -55,4 +67,14 @@ INSERT INTO event_type (name) VALUES ('comment');
 INSERT INTO event_type (name) VALUES ('create_post');
 INSERT INTO event_type (name) VALUES ('delete_post');
 INSERT INTO event_type (name) VALUES ('logout');
+'''
+
+select_event_by_user = '''
+SELECT strftime('%Y-%m-%d', datetime) AS date,
+    SUM(CASE WHEN event_type = 1 THEN 1 ELSE 0 END) AS logins,
+    SUM(CASE WHEN event_type = 5 THEN 1 ELSE 0 END) AS logouts,
+    SUM(CASE WHEN space_type = 2 THEN 1 ELSE 0 END) AS blog_events
+FROM logs
+WHERE user_id = "{}"
+GROUP BY date;
 '''
