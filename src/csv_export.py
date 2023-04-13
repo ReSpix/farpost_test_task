@@ -5,10 +5,10 @@ import csv
 
 def main():
     try:
-        blog_conection = sqlite3.connect('../db/blog.db')
+        blog_conection = sqlite3.connect('./db/blog.db')
         blog_cursor = blog_conection.cursor()
 
-        events_connection = sqlite3.connect('../db/events.db')
+        events_connection = sqlite3.connect('./db/events.db')
         events_cursor = events_connection.cursor()
 
     except sqlite3.Error as error:
@@ -39,7 +39,7 @@ def parse_to_file(user_id, query, cursor, filename):
     cursor.execute(comments_info_query)
     result = cursor.fetchall()
 
-    with open(f'..\csv\{filename}.csv', 'w', newline='') as file:
+    with open(f'.\csv\{filename}.csv', 'w', newline='') as file:
         writer = csv.writer(file, )
         for row in result:
             writer.writerow(row)

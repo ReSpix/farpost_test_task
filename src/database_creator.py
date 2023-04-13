@@ -9,7 +9,7 @@ def main():
 
 def create_database(query, database_name):
     try:
-        sqlite_connection = sqlite3.connect(f'../db/{database_name}.db')
+        sqlite_connection = sqlite3.connect(f'./db/{database_name}.db')
         cursor = sqlite_connection.cursor()
 
         cursor.executescript(query)

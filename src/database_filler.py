@@ -8,7 +8,7 @@ def main():
 
 def fill_blog():
     try:
-        sqlite_connection = sqlite3.connect(f'../db/blog.db')
+        sqlite_connection = sqlite3.connect(f'./db/blog.db')
         cursor = sqlite_connection.cursor()
     except sqlite3.Error as error:
         print("Не удалось подключиться к базе ", error)
@@ -130,7 +130,7 @@ def fill_blog():
 
 def fill_logs():
     try:
-        sqlite_connection = sqlite3.connect(f'../db/events.db')
+        sqlite_connection = sqlite3.connect(f'./db/events.db')
         cursor = sqlite_connection.cursor()
     except sqlite3.Error as error:
         print("Не удалось подключиться к базе ", error)
