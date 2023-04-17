@@ -1,11 +1,11 @@
 create_author_database = '''
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY,
   login TEXT NOT NULL,
   email TEXT NOT NULL
 );
 
-CREATE TABLE blog (
+CREATE TABLE IF NOT EXISTS blog (
   id INTEGER PRIMARY KEY,
   owner_id INTEGER NOT NULL,
   name TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE blog (
   FOREIGN KEY (owner_id) REFERENCES author(id)
 );
 
-CREATE TABLE post ( 
+CREATE TABLE IF NOT EXISTS post ( 
   id INTEGER PRIMARY KEY,
   header TEXT NOT NULL,
   text TEXT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE post (
   FOREIGN KEY (blog_id) REFERENCES blog(id)
 );
 
-CREATE TABLE comment (
+CREATE TABLE IF NOT EXISTS comment (
   id INTEGER PRIMARY KEY,
   text TEXT NOT NULL,
   user_id INTEGER NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE comment (
 '''
 
 create_events_database = '''
-CREATE TABLE logs (
+CREATE TABLE IF NOT EXISTS logs (
   id INTEGER PRIMARY KEY,
   datetime TEXT NOT NULL,
   user_id INTEGER NOT NULL,
@@ -48,12 +48,12 @@ CREATE TABLE logs (
   FOREIGN KEY (event_type_id) REFERENCES event_type(id)
 );
 
-CREATE TABLE space_type (
+CREATE TABLE IF NOT EXISTS space_type (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL
 );
 
-CREATE TABLE event_type (
+CREATE TABLE IF NOT EXISTS event_type (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL
 );
